@@ -1,29 +1,40 @@
-import axios, { Axios, RawAxiosRequestConfig } from "axios";
+import axios, { Axios, AxiosResponse, RawAxiosRequestConfig } from "axios";
 
 export default class ServerApi
 {
-  public readonly basePath: string = process.env.ServerPath!;
+  public readonly basePath: string = process.env.REACT_APP_SERVER_PATH!;
   private readonly _axios: Axios;
 
-  public constructor(){
-    this._axios = axios.create({baseURL: this.basePath});
+  public constructor()
+  {
+    this._axios = axios.create({ baseURL: this.basePath });
   }
 
   public getFileNames(directoryId: string): Promise<string[]>
   {
-    return this.getHelper(null, "Files", directoryId);
+    return this._axios.get(this.buildRoute("Files", directoryId)).then(axiosResponse => axiosResponse.data);
   }
 
-  private getHelper<T>(config?: RawAxiosRequestConfig<any> | undefined | null, ...tokens: string[]): Promise<T>
+  public postFiles(files: FileList): Promise<string>
   {
-    return this.requestHelper<T>(this._axios.get, tokens, config ?? undefined);
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++)
+    {
+      const file = files[i]
+      formData.append("formFiles", file); //не менять название formFiles, нужно для корректной работы asp
+    }
+    
+    return this._axios.post(this.buildRoute("Files"), formData)
+      .then(axiosResponse => axiosResponse.data);
   }
 
-  private requestHelper<T>(requestMethod: (url: string, config?: RawAxiosRequestConfig<any> | undefined) => Promise<T>,
-    tokens: string[],
-    config?: RawAxiosRequestConfig<any> | undefined
-    ): Promise<T>
+  public buildDownloadLink(directoryId: string): string{
+    return this.buildRoute("Archives", directoryId);
+  }
+
+
+  private buildRoute(...tokens: string[]): string
   {
-    return requestMethod.call(this._axios, this.basePath + tokens.join("\\"), config);
+    return this.basePath + tokens.join("\\");
   }
 }

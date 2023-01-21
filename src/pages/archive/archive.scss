@@ -1,0 +1,47 @@
+.wrapper {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+  grid-auto-rows: min-content;
+  row-gap: 10px;
+
+  header {
+    display: flex;
+    justify-content: center;
+  }
+
+  .drop-area {
+    border: 2px solid gray;
+    background: rgba(lightgray, 0.6);
+    width: 500px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .add-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 0.65;
+
+      &:hover,
+      &.active {
+        opacity: 1;
+      }
+
+      .add-icon {
+        &:active{
+          opacity: 0.65;
+        }
+      }
+    }
+  }
+
+  .download-link {
+    justify-self: center;
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import "./remove-default.scss";
 import Archive from './pages/archive/archive';
 import { Route, Routes } from 'react-router-dom';
 
